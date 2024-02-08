@@ -1,22 +1,18 @@
-from flask import Flask,request,render_template
-from flask_cors import cross_origin
+from flask import Flask,request,render_template,jsonify
+# from flask_cors import cross_origin
 import sklearn
 import pickle
 import pandas as pd  
-import os
-application=Flask(__name__)
+app=Flask(__name__)
 
 model=pickle.load(open("flight_rf.pkl","rb"))
-#with open("flight_price_pred_new.pkl", 'rb') as model1:
-        # data=model.read(1000)
-       # model= pickle.load(model1)
 
 
 
 
 
-@application.route("/predict",methods=["GET","POST"])
-@cross_origin()
+@app.route("/predict",methods=["GET","POST"])
+# @cross_origin()
 
 
 def predict():
@@ -306,18 +302,14 @@ def predict():
 
         output=round(prediction[0],2)
 
-        return render_template('home.html',prediction_text="Your Flight price is Rs. {}".format(output))
+        # return render_template('home.html',prediction_text="Your Flight price is Rs. {}".format(output))
+        return jsonify({"prediction_text": "Your Flight price is Rs. {}".format(output)})
 
 
     return render_template("home.html")
-@application.route("/")
-@cross_origin()
+@app.route("/")
+# @cross_origin()
 
 def home():
     return render_template('home.html')
 
-
-
-
-if __name__ == "__main__":
-    application.run(debug=True)
